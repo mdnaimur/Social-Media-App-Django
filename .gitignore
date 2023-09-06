@@ -5,6 +5,11 @@
 __pycache__
 db.sqlite3
 media
+**/migrations
+*.DS_Store
+**/__pycache__
+**/.DS_Store
+
 
 # Backup files # 
 *.bak 
