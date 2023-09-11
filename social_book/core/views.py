@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from .models import Profile
+from .models import Profile, Post
 from django.contrib.auth.models import User, auth
 # Create your views here.
 
@@ -12,7 +12,8 @@ def index(request):
     user_object = User.objects.get(username=request.user.username)
     user_profile = Profile.objects.get(user=user_object)
 
-    return render(request, 'index.html', {'user_profile': user_profile})
+    posts = Post.objects.all()
+    return render(request, 'index.html', {'user_profile': user_profile, 'posts': posts})
 
 
 def signup(request):
@@ -101,5 +102,20 @@ def settings(request):
 
             user_profile.save()
 
-        return redirect('settings')
+        return redirect('/')
     return render(request, 'setting.html', {'user_profile': user_profile})
+
+
+def upload(request):
+
+    if request.method == 'POST':
+        user = request.user.username
+        image = request.FILES.get('image_upload')
+        caption = request.POST['caption']
+
+        new_post = Post.objects.create(user=user, image=image, caption=caption)
+        new_post.save()
+
+        return redirect('/')
+    else:
+        return redirect('/')
